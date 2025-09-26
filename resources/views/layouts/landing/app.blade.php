@@ -14,14 +14,14 @@ $countryCode= strtolower($country?$country->value:'auto');
 
     <title>@yield('title')</title>
 
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/customize-animate.css') }}" />
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/odometer.css') }}" />
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/owl.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/assets/landing/css/main.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('ssets/landing/css/customize-animate.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/odometer.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/owl.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/toastr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/landing/css/main.css') }}"/>
 
-    <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/admin/intltelinput/css/intlTelInput.css')}}">
 
     @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
     <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $icon?->value?? '', $icon?->storage[0]?->value ?? 'public','favicon')}}">

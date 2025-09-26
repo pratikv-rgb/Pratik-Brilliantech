@@ -26,16 +26,21 @@ use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
-      use ActivationClass;
-
+ 
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    {    
+
+        
+
         $datas =  DataSetting::with('translations', 'storage')->where('type', 'admin_landing_page')->get();
+
+   ;
+
         $data = [];
         foreach ($datas as $key => $value) {
             if (count($value->translations) > 0) {
@@ -131,20 +136,25 @@ class HomeController extends Controller
             'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
             'available_zone_list' => $zones,
         ];
-
+       
 
         $config = Helpers::get_business_settings('landing_page');
+
+      
+
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-
+  
         $new_user = request()?->new_user ?? null;
 
         if (isset($config) && $config) {
-
+            
             return view('home', compact('landing_data', 'new_user'));
         } elseif ($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')) {
+            
             return view('layouts.landing.custom.index');
         } elseif ($landing_integration_type == 'url') {
+            
             return redirect($redirect_url);
         } else {
             abort(404);

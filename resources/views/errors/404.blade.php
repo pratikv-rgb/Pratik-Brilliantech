@@ -42,8 +42,7 @@
                 <p class="lead">{{translate('messages.404_warning_message')}}.</p>
                 @if(auth('vendor')->check())
                     <a class="btn btn-primary" href="{{route('vendor.dashboard')}}">{{translate('messages.dashboard')}}</a>
-                @else
-                    <a class="btn btn-primary" href="{{route('admin.dashboard')}}">{{translate('messages.dashboard')}}</a>
+              
                 @endif
             </div>
         </div>

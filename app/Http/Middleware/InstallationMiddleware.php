@@ -15,11 +15,16 @@ class InstallationMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (session()->has('purchase_key') == false && env('PURCHASE_CODE') == null) {
+        // Bypass license check if running locally
+        $localIps = ['127.0.0.1', '::1'];
+        if (in_array($request->ip(), $localIps)) {
+            return $next($request);
+        }
+
+        // Original license check
+        if (!session()->has('purchase_key') && env('PURCHASE_CODE') === null) {
             session()->flash('error', base64_decode('SW52YWxpZCBwdXJjaGFzZSBjb2RlIGZvciB0aGlzIHNvZnR3YXJlLg=='));
             return redirect('step2');
-        }elseif(env('PURCHASE_CODE') != null){
-            return $next($request);
         }
 
         return $next($request);

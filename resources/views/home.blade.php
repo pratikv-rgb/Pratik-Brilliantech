@@ -2,7 +2,7 @@
 @php($business_name = \App\CentralLogics\Helpers::get_settings('business_name'))
 @section('title', translate('messages.landing_page') . ' | ' . $business_name != 'null' ? $business_name : 'Sixam Mart')
 @section('content')
-
+   
     <!-- Basic Settings -->
     @php($front_end_url = \App\Models\BusinessSetting::where(['key' => 'front_end_url'])->first())
     @php($front_end_url = $front_end_url ? $front_end_url->value : null)

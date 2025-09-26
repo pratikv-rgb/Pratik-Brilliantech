@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
@@ -18,7 +18,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::post('remove_image', 'BusinessSettingsController@remove_image')->name('remove_image');
         Route::get('system-currency', 'SystemController@system_currency')->name('system_currency');
         //dashboard
-        Route::get('/', 'DashboardController@dashboard')->name('dashboard');
+        Route::get('/', 'DashboardController@dashboard')->name('admin.dashboard');
 
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');

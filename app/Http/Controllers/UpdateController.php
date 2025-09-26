@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class UpdateController extends Controller
 {
-    use ActivationClass;
+  
 
     public function update_software_index()
     {

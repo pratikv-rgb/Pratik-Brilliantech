@@ -42,7 +42,9 @@ class LoginController extends Controller
     }
 
     public function login($login_url)
-    {
+    {  
+
+
         $language = BusinessSetting::where('key', 'system_language')->first();
         if ($language) {
             foreach (json_decode($language->value, true) as $key => $data) {
@@ -149,8 +151,10 @@ class LoginController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:6',
             'role' => 'required'
-        ]);
-
+        ]); 
+         
+       
+        
         $recaptcha = Helpers::get_business_settings('recaptcha');
         if (isset($recaptcha) && $recaptcha['status'] == 1 && !$request?->set_default_captcha) {
             $request->validate([

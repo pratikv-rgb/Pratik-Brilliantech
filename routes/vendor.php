@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Vendor\SubscriptionController;
-
+use App\Http\Controllers\HomeController;
 
 Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
 

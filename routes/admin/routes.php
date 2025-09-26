@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\Item\AddonCategoryController;
 use App\Http\Controllers\Admin\Promotion\AdvertisementController;
 use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Subscription\SubscriptionController;
+use App\Http\Controllers\HomeController;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
