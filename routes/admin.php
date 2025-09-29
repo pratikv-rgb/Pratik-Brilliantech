@@ -1,11 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\POSController;
 
-Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
+Route::group([
+        'namespace'  => 'Admin',
+        'as'         => 'admin.',
+        'prefix'     => 'admin',
+        'middleware' => ['web', 'admin', 'current-module', 'actch:admin_panel'],
+    ], function () {
+        
+    Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 
-    Route::group(['middleware' => ['admin', 'current-module', 'actch:admin_panel' ]], function () {
+   
         Route::get('/test', function () {
             return view('admin-views.test.VendorPanel-tax-report');
         });
@@ -18,7 +25,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::post('remove_image', 'BusinessSettingsController@remove_image')->name('remove_image');
         Route::get('system-currency', 'SystemController@system_currency')->name('system_currency');
         //dashboard
-        Route::get('/', 'DashboardController@dashboard')->name('admin.dashboard');
+       
 
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');
@@ -517,31 +524,37 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('trip-export', 'CustomerController@customer_trip_export')->name('trip-export');
             });
         });
-        //Pos system
-        Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
-            Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
-            Route::group(['middleware' => ['module:pos']], function () {
-                Route::get('/', 'POSController@index')->name('index');
-                Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
-                Route::post('item-stock-view', 'POSController@item_stock_view')->name('item_stock_view');
-                Route::post('item-stock-view-update', 'POSController@item_stock_view_update')->name('item_stock_view_update');
-                Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
-                Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
-                Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');
-                Route::post('cart-items', 'POSController@cart_items')->name('cart_items');
-                Route::post('single-items', 'POSController@single_items')->name('single_items');
-                Route::post('update-quantity', 'POSController@updateQuantity')->name('updateQuantity');
-                Route::post('empty-cart', 'POSController@emptyCart')->name('emptyCart');
-                Route::post('tax', 'POSController@update_tax')->name('tax');
-                Route::post('discount', 'POSController@update_discount')->name('discount');
-                Route::get('customers', 'POSController@get_customers')->name('customers');
-                Route::post('order', 'POSController@place_order')->name('order');
-                Route::get('invoice/{id}', 'POSController@generate_invoice');
-                Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
-                Route::post('add-delivery-address', 'POSController@addDeliveryInfo')->name('add-delivery-address');
-                Route::get('data', 'POSController@extra_charge')->name('extra_charge');
-                Route::get('get-user-data', 'POSController@getUserData')->name('getUserData');
-            });
+
+   
+
+        Route::group([
+            'prefix' => 'pos',
+            'as'     => 'pos.',
+            'middleware' => ['module:pos'],
+        ], function () {
+
+            Route::get('/', [POSController::class, 'index'])->name('index'); // admin.pos.index
+            Route::get('quick-view', [POSController::class, 'quick_view'])->name('quick-view');
+            Route::post('variant_price', [POSController::class, 'variant_price'])->name('variant_price');
+            Route::post('item-stock-view', [POSController::class, 'item_stock_view'])->name('item_stock_view');
+            Route::post('item-stock-view-update', [POSController::class, 'item_stock_view_update'])->name('item_stock_view_update');
+            Route::get('quick-view-cart-item', [POSController::class, 'quick_view_card_item'])->name('quick-view-cart-item');
+            Route::post('add-to-cart', [POSController::class, 'addToCart'])->name('add-to-cart');
+            Route::post('remove-from-cart', [POSController::class, 'removeFromCart'])->name('remove-from-cart');
+            Route::post('cart-items', [POSController::class, 'cart_items'])->name('cart_items');
+            Route::post('single-items', [POSController::class, 'single_items'])->name('single_items');
+            Route::post('update-quantity', [POSController::class, 'updateQuantity'])->name('updateQuantity');
+            Route::post('empty-cart', [POSController::class, 'emptyCart'])->name('emptyCart');
+            Route::post('tax', [POSController::class, 'update_tax'])->name('tax');
+            Route::post('discount', [POSController::class, 'update_discount'])->name('discount');
+            Route::get('customers', [POSController::class, 'get_customers'])->name('customers');
+            Route::post('order', [POSController::class, 'place_order'])->name('order');
+            Route::get('invoice/{id}', [POSController::class, 'generate_invoice'])->name('invoice');
+            Route::post('customer-store', [POSController::class, 'customer_store'])->name('customer-store');
+            Route::post('add-delivery-address', [POSController::class, 'addDeliveryInfo'])->name('add-delivery-address');
+            Route::get('data', [POSController::class, 'extra_charge'])->name('extra_charge');
+            Route::get('get-user-data', [POSController::class, 'getUserData'])->name('getUserData');
+
         });
 
         Route::group(['prefix' => 'reviews', 'as' => 'reviews.', 'middleware' => ['module:customer_management']], function () {
@@ -785,5 +798,4 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('export/{id}/{type?}', 'DeliveryManDisbursementController@export')->name('export');
             });
         });
-    });
 });
