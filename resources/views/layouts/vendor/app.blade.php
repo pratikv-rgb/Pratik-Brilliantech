@@ -12,7 +12,7 @@
     $store = \App\Models\Store::findOrFail($storeId);
     $moduleType = $store?->module?->module_type;
 ?>
-{{-- {{ dd($countryCode) }} --}}
+
 <html dir="{{ $site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"  class="{{ $site_direction === 'rtl'?'active':'' }}">
 <head>
     <meta charset="utf-8">
@@ -55,7 +55,7 @@
         <div class="col-md-12">
             <div id="loading" class="initial-hidden">
                 <div class="loading-inner">
-                    <img width="200" src="{{asset('public/assets/admin/img/loader.gif')}}">
+                    <img width="200" src="{{asset('assets/admin/img/loader.gif')}}">
                 </div>
             </div>
         </div>
@@ -214,22 +214,22 @@
 <!-- ========== END MAIN CONTENT ========== -->
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
-<script src="{{asset('public/assets/admin')}}/js/custom.js"></script>
-<script src="{{asset('public/assets/admin')}}/js/firebase.min.js"></script>
+<script src="{{asset('assets/admin')}}/js/custom.js"></script>
+<script src="{{asset('assets/admin')}}/js/firebase.min.js"></script>
 <!-- JS Implementing Plugins -->
 
 @stack('script')
 
 <!-- JS Front -->
-<script src="{{asset('public/assets/admin')}}/js/vendor.min.js"></script>
-<script src="{{asset('public/assets/admin')}}/js/theme.min.js"></script>
-<script src="{{asset('public/assets/admin')}}/js/sweet_alert.js"></script>
-<script src="{{asset('public/assets/admin')}}/js/toastr.js"></script>
-<script src="{{asset('public/assets/admin')}}/js/emogi-area.js"></script>
-<script src="{{asset('public/assets/admin/js/owl.min.js')}}"></script>
-<script src="{{asset('public/assets/admin/js/app-blade/vendor.js')}}"></script>
+<script src="{{asset('assets/admin')}}/js/vendor.min.js"></script>
+<script src="{{asset('assets/admin')}}/js/theme.min.js"></script>
+<script src="{{asset('assets/admin')}}/js/sweet_alert.js"></script>
+<script src="{{asset('assets/admin')}}/js/toastr.js"></script>
+<script src="{{asset('assets/admin')}}/js/emogi-area.js"></script>
+<script src="{{asset('assets/admin/js/owl.min.js')}}"></script>
+<script src="{{asset('assets/admin/js/app-blade/vendor.js')}}"></script>
 {!! Toastr::message() !!}
-<script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
+<script src="{{asset('assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
 
 @if ($errors->any())
 
@@ -246,10 +246,10 @@
 
 @stack('script_2')
 <audio id="myAudio">
-    <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
+    <source src="{{asset('assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
-    <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
-    <script src="{{asset('public/assets/admin/js/keyword-highlighted.js')}}"></script>
+    <script src="{{asset('assets/admin/js/view-pages/common.js')}}"></script>
+    <script src="{{asset('assets/admin/js/keyword-highlighted.js')}}"></script>
 
 <script>
     var audio = document.getElementById("myAudio");
@@ -523,7 +523,7 @@
             inputs.forEach(input => {
                 window.intlTelInput(input, {
                     initialCountry: "{{$countryCode}}",
-                    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+                    utilsScript: "{{ asset('assets/admin/intltelinput/js/utils.js') }}",
                     autoInsertDialCode: true,
                     nationalMode: false,
                     formatOnDisplay: false,
@@ -555,7 +555,7 @@
                         if (response.length === 0) {
                             $('#searchResults').html('<div class="fs-16 fw-500 mb-2">' + @json(translate('Search Result')) + '</div>' +
                                 '<div class="search-list h-300 d-flex flex-column gap-2 justify-content-center align-items-center fs-16">' +
-                                '<img width="30" src="' + @json(asset('/public/assets/admin/img/no-search-found.png')) + '" alt="">' + ' ' +
+                                '<img width="30" src="' + @json(asset('assets/admin/img/no-search-found.png')) + '" alt="">' + ' ' +
                                 @json(translate('No result found')) +
                                     '</div>');
 
@@ -695,7 +695,7 @@
 
 <!-- IE Support -->
 <script>
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('public/assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
+    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) document.write('<script src="{{asset('assets/admin')}}/vendor/babel-polyfill/polyfill.min.js"><\/script>');
 </script>
 </body>
 </html>

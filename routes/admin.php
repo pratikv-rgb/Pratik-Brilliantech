@@ -173,10 +173,10 @@ Route::group([
             Route::get('get-stores', 'VendorController@get_stores')->name('get-stores');
             Route::get('get-providers', 'VendorController@get_providers')->name('get-providers');
             Route::get('get-addons', 'VendorController@get_addons')->name('get_addons');
+            Route::post('store', [\App\Http\Controllers\Admin\VendorController::class, 'store'])->name('create');
             Route::group(['middleware' => ['module:store']], function () {
                 Route::get('update-application/{id}/{status}', 'VendorController@update_application')->name('application');
                 Route::get('add', 'VendorController@index')->name('add');
-                Route::post('store', 'VendorController@store')->name('store');
                 Route::get('edit/{id}', 'VendorController@edit')->name('edit');
                 Route::post('update/{store}', 'VendorController@update')->name('update');
                 Route::post('discount/{store}', 'VendorController@discountSetup')->name('discount');

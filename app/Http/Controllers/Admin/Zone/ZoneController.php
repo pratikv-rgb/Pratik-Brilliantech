@@ -218,7 +218,10 @@ class ZoneController extends BaseController
     }
 
     public function getCoordinates($id): JsonResponse
-    {
+    { 
+
+
+
         $zone = $this->zoneRepo->getWithCoordinateWhere(
             params: ['id'=> $id]
         );
