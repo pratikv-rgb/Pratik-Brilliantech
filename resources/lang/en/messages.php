@@ -7896,4 +7896,7 @@ Smartly or Earn. ',
   'The tin field is required.' => 'The tin field is required.',
   'The tin expire date field is required.' => 'The tin expire date field is required.',
   'store_added_successfully' => 'Store added successfully',
+  'Discount can not be more than or equal' => 'Discount can not be more than or equal',
+  'Murphy Glover' => 'Murphy Glover',
+  'Category required' => 'Category required',
 );

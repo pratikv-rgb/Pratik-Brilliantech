@@ -2,7 +2,7 @@
 
 <?php $__env->startPush('css_or_js'); ?>
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <link href="<?php echo e(asset('public/assets/admin/css/tags-input.min.css')); ?>" rel="stylesheet">
+    <link href="<?php echo e(asset('assets/admin/css/tags-input.min.css')); ?>" rel="stylesheet">
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -12,7 +12,7 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="<?php echo e(asset('public/assets/admin/img/items.png')); ?>" class="w--22" alt="">
+                    <img src="<?php echo e(asset('assets/admin/img/items.png')); ?>" class="w--22" alt="">
                 </span>
                 <span>
                     <?php echo e(translate('messages.add_new_item')); ?>
@@ -141,7 +141,7 @@
                                 </label>
                                 <div id="image-viewer-section" class="text-center pt-2 pb-3 text-left">
                                     <img class="img--100" id="viewer"
-                                            src="<?php echo e(asset('public/assets/admin/img/100x100/2.png')); ?>" alt="banner image"/>
+                                            src="<?php echo e(asset('assets/admin/img/100x100/2.png')); ?>" alt="banner image"/>
                                 </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
@@ -421,7 +421,7 @@
                             <!-- Empty Variation -->
                             <div id="empty-variation">
                                 <div class="text-center">
-                                    <img src="<?php echo e(asset('/public/assets/admin/img/variation.png')); ?>" alt="">
+                                    <img src="<?php echo e(asset('assets/admin/img/variation.png')); ?>" alt="">
                                     <div><?php echo e(translate('No variation added')); ?></div>
                                 </div>
                             </div>
@@ -595,9 +595,9 @@
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startPush('script_2'); ?>
-    <script src="<?php echo e(asset('public/assets/admin')); ?>/js/tags-input.min.js"></script>
-    <script src="<?php echo e(asset('public/assets/admin/js/spartan-multi-image-picker.js')); ?>"></script>
-    <script src="<?php echo e(asset('public/assets/admin')); ?>/js/view-pages/vendor/product-index.js"></script>
+    <script src="<?php echo e(asset('assets/admin')); ?>/js/tags-input.min.js"></script>
+    <script src="<?php echo e(asset('assets/admin/js/spartan-multi-image-picker.js')); ?>"></script>
+    <script src="<?php echo e(asset('assets/admin')); ?>/js/view-pages/vendor/product-index.js"></script>
 <script>
     "use strict";
 
@@ -836,7 +836,7 @@
             groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
             maxFileSize: '',
             placeholderImage: {
-                image: "<?php echo e(asset('public/assets/admin/img/upload.png')); ?>",
+                image: "<?php echo e(asset('assets/admin/img/upload.png')); ?>",
                 width: '100px'
             },
             dropFileLabel: "Drop Here",
@@ -875,7 +875,7 @@
             $('#choice_attributes').val(null).trigger('change');
             $('#customer_choice_options').empty().trigger('change');
             $('#variant_combination').empty().trigger('change');
-            $('#viewer').attr('src', "<?php echo e(asset('public/assets/admin/img/upload.png')); ?>");
+            $('#viewer').attr('src', "<?php echo e(asset('assets/admin/img/upload.png')); ?>");
             $("#coba").empty().spartanMultiImagePicker({
             fieldName: 'item_images[]',
             maxCount: 6,
@@ -883,7 +883,7 @@
             groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
             maxFileSize: '',
             placeholderImage: {
-                image: "<?php echo e(asset('public/assets/admin/img/400x400/img2.jpg')); ?>",
+                image: "<?php echo e(asset('assets/admin/img/400x400/img2.jpg')); ?>",
                 width: '100%'
             },
             dropFileLabel: "Drop Here",
