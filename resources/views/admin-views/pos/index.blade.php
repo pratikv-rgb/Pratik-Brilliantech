@@ -284,8 +284,7 @@
 
 
 @push('script_2')
-<script src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&callback=initMap&v=3.49">
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=drawing,places&v=3.49"></script>
 <script src="{{asset('assets/admin/js/view-pages/pos.js')}}"></script>
 
 <script>
@@ -306,239 +305,92 @@
         }
     });
 
+  function initMap() {
+    @php($default_location=\App\Models\BusinessSetting::where('key','default_location')->first())
+    @php($default_location=$default_location->value?json_decode($default_location->value, true):0)
 
-    function initMap() {
-        let map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 13,
-            center: {
-                lat: {{ $store ? $store['latitude'] : '23.757989' }},
-                lng: {{ $store ? $store['longitude'] : '90.360587' }}
-            }
-        });
+    let myLatlng = {
+        lat: {{$default_location?$default_location['lat']:'23.757989'}},
+        lng: {{$default_location?$default_location['lng']:'90.360587'}}
+    };
 
-        let zonePolygon = null;
+    let myOptions = {
+        zoom: 13,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-        //get current location block
-        let infoWindow = new google.maps.InfoWindow();
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                   let myLatlng = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    };
-                    infoWindow.setPosition(myLatlng);
-                    infoWindow.setContent("Location found.");
-                    infoWindow.open(map);
-                    map.setCenter(myLatlng);
-                },
-                () => {
-                    handleLocationError(true, infoWindow, map.getCenter());
-                }
-            );
-        } else {
-            // Browser doesn't support Geolocation
-            handleLocationError(false, infoWindow, map.getCenter());
-        }
-        //-----end block------
-        const input = document.getElementById("pac-input");
-        const searchBox = new google.maps.places.SearchBox(input);
-        map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
-        let markers = [];
-        const bounds = new google.maps.LatLngBounds();
-        searchBox.addListener("places_changed", () => {
-            const places = searchBox.getPlaces();
+    let map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+    let marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        draggable: true // make marker draggable
+    });
 
-            if (places.length === 0) {
-                return;
-            }
-            // Clear out the old markers.
-            markers.forEach((marker) => {
-                marker.setMap(null);
-            });
-            markers = [];
-            // For each place, get the icon, name and location.
-            places.forEach((place) => {
-                if (!place.geometry || !place.geometry.location) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                if(!google.maps.geometry.poly.containsLocation(
-                    place.geometry.location,
-                    zonePolygon
-                )){
-                    toastr.error('{{ translate('messages.out_of_coverage') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    return false;
-                }
-
-                document.getElementById('latitude').value = place.geometry.location.lat();
-                document.getElementById('longitude').value = place.geometry.location.lng();
-
-                const icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25),
-                };
-                // Create a marker for each place.
-                markers.push(
-                    new google.maps.Marker({
-                        map,
-                        icon,
-                        title: place.name,
-                        position: place.geometry.location,
-                    })
-                );
-
-                if (place.geometry.viewport) {
-                    // Only geocodes have viewport.
-                    bounds.union(place.geometry.viewport);
-                } else {
-                    bounds.extend(place.geometry.location);
-                }
-            });
-            map.fitBounds(bounds);
-        });
-        @if ($store)
-            $.get({
-                url: '{{ url('/') }}/admin/zone/get-coordinates/{{ $store->zone_id }}',
-                dataType: 'json',
-                success: function(data) {
-                    zonePolygon = new google.maps.Polygon({
-                        paths: data.coordinates,
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: 'white',
-                        fillOpacity: 0,
-                    });
-                    zonePolygon.setMap(map);
-                    zonePolygon.getPaths().forEach(function(path) {
-                        path.forEach(function(latlng) {
-                            bounds.extend(latlng);
-                            map.fitBounds(bounds);
-                        });
-                    });
-                    map.setCenter(data.center);
-                    google.maps.event.addListener(zonePolygon, 'click', function(mapsMouseEvent) {
-                        infoWindow.close();
-                        // Create a new InfoWindow.
-                        infoWindow = new google.maps.InfoWindow({
-                            position: mapsMouseEvent.latLng,
-                            content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null,
-                                2),
-                        });
-                        let coordinates;
-
-                         coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                         coordinates = JSON.parse(coordinates);
-
-                        document.getElementById('latitude').value = coordinates['lat'];
-                        document.getElementById('longitude').value = coordinates['lng'];
-                        infoWindow.open(map);
-
-                        let geocoder;
-                        geocoder = new google.maps.Geocoder();
-                        let latlng = new google.maps.LatLng( coordinates['lat'], coordinates['lng'] ) ;
-
-                        geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-                            if (status === google.maps.GeocoderStatus.OK) {
-                                if (results[1]) {
-                                    let address = results[1].formatted_address;
-                                    // initialize services
-                                    const geocoder = new google.maps.Geocoder();
-                                    const service = new google.maps.DistanceMatrixService();
-                                    // build request
-                                    const origin1 = { lat: {{$store['latitude']}}, lng: {{$store['longitude']}} };
-                                    const origin2 = "{{$store->address}}";
-                                    const destinationA = address;
-                                    const destinationB = { lat: coordinates['lat'], lng: coordinates['lng'] };
-                                    const request = {
-                                        origins: [origin1, origin2],
-                                        destinations: [destinationA, destinationB],
-                                        travelMode: google.maps.TravelMode.DRIVING,
-                                        unitSystem: google.maps.UnitSystem.METRIC,
-                                        avoidHighways: false,
-                                        avoidTolls: false,
-                                    };
-
-                                    // get distance matrix response
-                                    service.getDistanceMatrix(request).then((response) => {
-                                        // put response
-                                        let distancMeter = response.rows[0].elements[0].distance['value'];
-                                        let distanceMile = distancMeter/1000;
-                                        let distancMileResult = Math.round((distanceMile + Number.EPSILON) * 100) / 100;
-                                        document.getElementById('distance').value = distancMileResult;
-                                        document.getElementById('address').value =response.destinationAddresses[1];
-                                        <?php
-                                        $module_wise_delivery_charge = $store->zone->modules()->where('modules.id', $store->module_id)->first();
-                                        if($store->sub_self_delivery ){
-                                                $per_km_shipping_charge = $store?->per_km_shipping_charge ?? 0;
-                                                $minimum_shipping_charge = $store?->minimum_shipping_charge ?? 0;
-                                                $maximum_shipping_charge = $store?->maximum_shipping_charge?? 0;
-
-                                                $self_delivery_status = 1;
-                                        } else{
-                                                $self_delivery_status = 0;
-
-                                            if ($module_wise_delivery_charge) {
-                                                $per_km_shipping_charge = $module_wise_delivery_charge->pivot->per_km_shipping_charge;
-                                                $minimum_shipping_charge = $module_wise_delivery_charge->pivot->minimum_shipping_charge;
-                                                $maximum_shipping_charge = $module_wise_delivery_charge->pivot->maximum_shipping_charge??0;
-
-                                            } else {
-                                                $per_km_shipping_charge = (float)\App\Models\BusinessSetting::where(['key' => 'per_km_shipping_charge'])->first()->value;
-                                                $minimum_shipping_charge = (float)\App\Models\BusinessSetting::where(['key' => 'minimum_shipping_charge'])->first()->value;
-                                                $maximum_shipping_charge = 0;
-                                            }
-                                        }
-
-
-                                        ?>
-
-                                        $.get({
-                                                url: '{{ route('admin.pos.extra_charge') }}',
-                                                dataType: 'json',
-                                                data: {
-                                                    distancMileResult: distancMileResult,
-                                                    self_delivery_status: {{ $self_delivery_status }},
-                                                },
-                                                success: function(data) {
-                                                 let   extra_charge = data;
-                                                    let original_delivery_charge =  (distancMileResult * {{$per_km_shipping_charge}} > {{$minimum_shipping_charge}}) ? distancMileResult * {{$per_km_shipping_charge}} : {{$minimum_shipping_charge}};
-                                                    let delivery_amount = ({{ $maximum_shipping_charge }} > {{ $minimum_shipping_charge }} && original_delivery_charge + extra_charge > {{ $maximum_shipping_charge }} ? {{ $maximum_shipping_charge }} : original_delivery_charge + extra_charge);
-                                                    let delivery_charge =Math.round(( delivery_amount + Number.EPSILON) * 100) / 100;
-                                                document.getElementById('delivery_fee').value = delivery_charge;
-                                                $('#delivery_fee').siblings('strong').html(delivery_charge + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
-
-                                                },
-                                                error:function(){
-                                                    let original_delivery_charge =  (distancMileResult * {{$per_km_shipping_charge}} > {{$minimum_shipping_charge}}) ? distancMileResult * {{$per_km_shipping_charge}} : {{$minimum_shipping_charge}};
-
-                                                    let delivery_charge =Math.round((
-                                                ({{ $maximum_shipping_charge }} > {{ $minimum_shipping_charge }} && original_delivery_charge  > {{ $maximum_shipping_charge }} ? {{ $maximum_shipping_charge }} : original_delivery_charge)
-                                                + Number.EPSILON) * 100) / 100;
-                                                document.getElementById('delivery_fee').value = delivery_charge;
-                                                $('#delivery_fee').siblings('strong').html(delivery_charge + '{{ \App\CentralLogics\Helpers::currency_symbol() }}');
-                                                }
-                                            });
-
-                                    });
-
-                                }
-                            }
-                        });
-                    });
-                },
-            });
-        @endif
-
+    // update lat/lng fields
+    function updateLatLngFields(lat, lng) {
+        document.getElementById("latitude").value = lat.toFixed(6);
+        document.getElementById("longitude").value = lng.toFixed(6);
     }
+
+    // set default lat/lng
+    updateLatLngFields(myLatlng.lat, myLatlng.lng);
+
+    // handle map click
+    map.addListener("click", function(event) {
+        let lat = event.latLng.lat();
+        let lng = event.latLng.lng();
+        marker.setPosition({ lat, lng });
+        updateLatLngFields(lat, lng);
+    });
+
+    // handle marker drag event
+    marker.addListener("dragend", function(event) {
+        let lat = event.latLng.lat();
+        let lng = event.latLng.lng();
+        updateLatLngFields(lat, lng);
+    });
+
+    // Geolocation: center map on user location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                map.setCenter(pos);
+            }
+        );
+    }
+
+    // Search Box integration
+    const input = document.getElementById("pac-input");
+    const searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+
+    map.addListener("bounds_changed", () => {
+        searchBox.setBounds(map.getBounds());
+    });
+
+    searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+        if (places.length == 0) return;
+
+        const place = places[0];
+        if (!place.geometry || !place.geometry.location) return;
+
+        let lat = place.geometry.location.lat();
+        let lng = place.geometry.location.lng();
+
+        // move marker and update fields
+        marker.setPosition({ lat, lng });
+        map.setCenter({ lat, lng });
+        map.setZoom(15);
+        updateLatLngFields(lat, lng);
+    });
+}
+
 
 
     $(document).on('ready', function () {

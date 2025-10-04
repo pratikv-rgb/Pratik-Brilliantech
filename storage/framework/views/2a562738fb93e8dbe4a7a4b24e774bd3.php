@@ -15,11 +15,11 @@
         <div class="d-flex align-items-center justify-content-center active">
             <img class="img-responsive initial--30 onerror-image"
 
-            src="<?php echo e($product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg')); ?>"
+            src="<?php echo e($product['image_full_url'] ?? asset('assets/admin/img/160x160/img2.jpg')); ?>"
 
 
-                data-onerror-image="<?php echo e(asset('public/assets/admin/img/160x160/img2.jpg')); ?>"
-                data-zoom="<?php echo e(asset('storage/app/public/product')); ?>/<?php echo e($product['image']); ?>" alt="Product image"
+                data-onerror-image="<?php echo e(asset('assets/admin/img/160x160/img2.jpg')); ?>"
+                data-zoom="<?php echo e(asset('storage/app/product')); ?>/<?php echo e($product['image']); ?>" alt="Product image"
                 width="">
             <div class="cz-image-zoom-pane"></div>
         </div>
@@ -236,7 +236,7 @@
         </div>
     </div>
 </div>
-<script src="<?php echo e(asset('public/assets/admin')); ?>/js/view-pages/common.js"></script>
+<script src="<?php echo e(asset('assets/admin')); ?>/js/view-pages/common.js"></script>
 <script type="text/javascript">
     "use strict";
     setTimeout(check_stock, 100);

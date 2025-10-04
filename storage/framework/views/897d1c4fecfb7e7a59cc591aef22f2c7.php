@@ -342,7 +342,14 @@
                                 <input id="pac-input" class="controls rounded initial-8"
                                     title="<?php echo e(translate('messages.search_your_location_here')); ?>" type="text"
                                     placeholder="<?php echo e(translate('messages.search_here')); ?>" />
-                                <div class="mb-2 h-200px" id="map"></div>
+                                  <div class="mb-2 h-200px" id="map"></div>
+
+
+                                    <div class="map-warper rounded mt-0">
+                                       <input id="pac-input" class="controls rounded" title="<?php echo e(translate('messages.search_your_location_here')); ?>" type="text" placeholder="<?php echo e(translate('messages.search_here')); ?>"/>
+                                       <div id="map-canvas" class="rounded"></div>
+                                    </div>
+
                             </div>
                         </div>
                     </div>
