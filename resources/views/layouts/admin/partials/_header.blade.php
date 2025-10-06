@@ -134,10 +134,7 @@
                     <li class="nav-item max-sm-m-0 w-xxl-200px ml-auto flex-grow-0">
                         <button type="button" id="modalOpener" class="title-color bg--secondary border-0 rounded justify-content-between w-100 align-items-center py-2 px-2 px-md-3 d-flex gap-1" data-toggle="modal" data-target="#staticBackdrop">
                             <div class="align-items-center d-flex flex-grow-1 gap-1 justify-content-between">
-                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{translate('Search_or')}}
-
-                                    <span class="bg-E7E6E8 border ctrlplusk d-md-block d-none font-bold fs-12 fw-bold lh-1 ms-1 px-1 rounded text-muted">Ctrl+K</span>
-
+                                <span class="align-items-center d-none d-xxl-flex gap-2 text-muted">{{translate('Search')}}
                                 </span>
                                 <img width="14" class="h-auto" src="{{asset('assets/admin/img/new-img/search.svg')}}" class="svg" alt="">
                             </div>

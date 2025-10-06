@@ -7899,4 +7899,5 @@ Smartly or Earn. ',
   'Discount can not be more than or equal' => 'Discount can not be more than or equal',
   'Murphy Glover' => 'Murphy Glover',
   'Category required' => 'Category required',
+  'searching for deliverymen' => 'Searching for deliverymen',
 );

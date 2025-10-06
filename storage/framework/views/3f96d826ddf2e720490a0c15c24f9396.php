@@ -171,7 +171,7 @@
                                 <a class="order--card h-100" href="<?php echo e(route('admin.order.list',['canceled'])); ?>">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="<?php echo e(asset('/assets/admin/img/order-status/canceled.svg')); ?>" alt="dashboard" class="oder--card-icon">
+                                            <img src="<?php echo e(asset('/assets/admin/img/dashboard/grocery/canceled.svg')); ?>" alt="dashboard" class="oder--card-icon">
                                             <span><?php echo e(translate('messages.canceled')); ?></span>
                                         </h6>
                                         <span class="card-title text-danger">
@@ -186,7 +186,7 @@
                                 <a class="order--card h-100" href="<?php echo e(route('admin.order.list',['refunded'])); ?>">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="<?php echo e(asset('/assets/admin/img/order-status/refunded.svg')); ?>" alt="dashboard" class="oder--card-icon">
+                                            <img src="<?php echo e(asset('/assets/admin/img/dashboard/grocery/refunded.svg')); ?>" alt="dashboard" class="oder--card-icon">
                                             <span><?php echo e(translate('messages.refunded')); ?></span>
                                         </h6>
                                         <span class="card-title text-danger">
@@ -201,7 +201,7 @@
                                 <a class="order--card h-100" href="<?php echo e(route('admin.order.list',['failed'])); ?>">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                            <img src="<?php echo e(asset('/assets/admin/img/order-status/payment-failed.svg')); ?>" alt="dashboard" class="oder--card-icon">
+                                            <img src="<?php echo e(asset('/assets/admin/img/dashboard/grocery/payment-failed.svg')); ?>" alt="dashboard" class="oder--card-icon">
                                             <span><?php echo e(translate('messages.payment_failed')); ?></span>
                                         </h6>
                                         <span class="card-title text-danger">
