@@ -29,14 +29,15 @@ class VendorLoginController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required',
-            'password' => 'required|min:6'
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'vendor_type' => 'required|in:owner,employee'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $vendor_type= $request->vendor_type;
+        $vendor_type = $request->vendor_type;
 
         $data = [
             'email' => $request->email,
@@ -107,22 +108,30 @@ class VendorLoginController extends Controller
             }
         } else {
             $errors = [];
-            array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
+            array_push($errors, ['code' => 'auth-001', 'message' => translate('Invalid vendor type. Please specify either "owner" or "employee"')]);
             return response()->json([
                 'errors' => $errors
-            ], 401);
+            ], 400);
         }
 
     }
 
     private function genarate_token($email)
     {
-        $token = Str::random(120);
-        $is_available = Vendor::where('auth_token', $token)->where('email', '!=', $email)->count();
-        if($is_available)
-        {
-            $this->genarate_token($email);
+        $max_attempts = 10;
+        $attempts = 0;
+        
+        do {
+            $token = Str::random(120);
+            $is_available = Vendor::where('auth_token', $token)->where('email', '!=', $email)->count();
+            $attempts++;
+        } while ($is_available > 0 && $attempts < $max_attempts);
+        
+        if ($attempts >= $max_attempts) {
+            // Fallback: use email + timestamp to ensure uniqueness
+            $token = Str::random(100) . '_' . time() . '_' . Str::random(20);
         }
+        
         return $token;
     }
 

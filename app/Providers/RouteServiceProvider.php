@@ -165,5 +165,9 @@ class RouteServiceProvider extends ServiceProvider
 		Route::prefix('api')
 			->middleware('api')
 			->group(base_path('routes/api/v1/api.php'));
+			
+		Route::prefix('api')
+			->middleware(['throttle:1000,1', \Illuminate\Routing\Middleware\SubstituteBindings::class])
+			->group(base_path('routes/api/v1/pos.php'));
 	}
 }

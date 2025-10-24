@@ -11,6 +11,7 @@
         "ext-simplexml": "*",
         "beyondcode/laravel-websockets": "^1.14",
         "brian2694/laravel-toastr": "^5.54",
+        "darkaonline/l5-swagger": "^8.0",
         "doctrine/dbal": "^3.3",
         "firebase/php-jwt": "^6.4",
         "gregwar/captcha": "^1.1",

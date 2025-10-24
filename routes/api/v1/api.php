@@ -2,8 +2,61 @@
 
 use App\WebSockets\Handler\DMLocationSocketHandler;
 use Illuminate\Support\Facades\Route;
+
+// Simple test route outside any groups
+Route::get('/api/v1/simple-test', function () {
+    return response()->json(['message' => 'Simple test route working']);
+});
 use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Api\V1\HomeController;
+use App\Http\Controllers\Api\V1\ZoneController;
+use App\Http\Controllers\Api\V1\AddonCategoryController;
+use App\Http\Controllers\Api\V1\ConfigController;
+use App\Http\Controllers\Api\V1\Auth\CustomerAuthController;
+use App\Http\Controllers\Api\V1\Auth\PasswordResetController;
+use App\Http\Controllers\Api\V1\Auth\DeliveryManLoginController;
+use App\Http\Controllers\Api\V1\Auth\DMPasswordResetController;
+use App\Http\Controllers\Api\V1\Auth\VendorLoginController;
+use App\Http\Controllers\Api\V1\Auth\VendorPasswordResetController;
+use App\Http\Controllers\Api\V1\Auth\SocialAuthController;
+use App\Http\Controllers\Api\V1\Vendor\SubscriptionController;
+use App\Http\Controllers\Api\V1\ModuleController;
+use App\Http\Controllers\Api\V1\NewsletterController;
+use App\Http\Controllers\Api\V1\DeliveryManController;
+use App\Http\Controllers\Api\V1\DeliveryManReviewController;
+use App\Http\Controllers\Api\V1\Vendor\VendorController;
+use App\Http\Controllers\Api\V1\Vendor\WithdrawMethodController;
+use App\Http\Controllers\Api\V1\Vendor\ReportController;
+use App\Http\Controllers\Api\V1\Vendor\UnitController;
+use App\Http\Controllers\Api\V1\Vendor\BusinessSettingsController;
+use App\Http\Controllers\Api\V1\Vendor\AttributeController;
+use App\Http\Controllers\Api\V1\Vendor\CouponController;
+use App\Http\Controllers\Api\V1\Vendor\AdvertisementController;
+use App\Http\Controllers\Api\V1\Vendor\AddOnController;
+use App\Http\Controllers\Api\V1\Vendor\BannerController;
+use App\Http\Controllers\Api\V1\Vendor\CategoryController;
+use App\Http\Controllers\Api\V1\Vendor\DeliveryManController as VendorDeliveryManController;
+use App\Http\Controllers\Api\V1\Vendor\ItemController;
+use App\Http\Controllers\Api\V1\Vendor\POSController;
+use App\Http\Controllers\Api\V1\Vendor\ConversationController;
+use App\Http\Controllers\Api\V1\TestimonialController;
+use App\Http\Controllers\Api\V1\OrderController;
+use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\NotificationController;
+use App\Http\Controllers\Api\V1\ConversationController as CustomerConversationController;
+use App\Http\Controllers\Api\V1\WishlistController;
+use App\Http\Controllers\Api\V1\LoyaltyPointController;
+use App\Http\Controllers\Api\V1\WalletController;
+use App\Http\Controllers\Api\V1\CartController;
+use App\Http\Controllers\Api\V1\StoreController;
+use App\Http\Controllers\Api\V1\SearchController;
+use App\Http\Controllers\Api\V1\OtherBannerController;
+use App\Http\Controllers\Api\V1\CommonConditionController;
+use App\Http\Controllers\Api\V1\BrandController;
+use App\Http\Controllers\Api\V1\CampaignController;
+use App\Http\Controllers\Api\V1\FlashSaleController;
+use App\Http\Controllers\Api\V1\CashBackController;
+use App\Http\Controllers\Api\V1\ParcelCategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,78 +68,81 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
-    Route::group(['prefix' => 'configurations'], function () {
-        Route::get('/', 'ExternalConfigurationController@getConfiguration');
-        Route::get('/get-external', 'ExternalConfigurationController@getExternalConfiguration');
-        Route::post('/store', 'ExternalConfigurationController@updateConfiguration');
+Route::group(['namespace' => 'Api\V1'], function () {
+   
+    // Test route
+    Route::get('/test', function () {
+        return response()->json(['message' => 'API is working']);
     });
 
-    Route::get('/terms-and-conditions', 'HomeController@terms_and_conditions');
-    Route::get('/about-us', 'HomeController@about_us');
-    Route::get('/privacy-policy', 'HomeController@privacy_policy');
-    Route::get('/refund-policy', 'HomeController@refund_policy');
-    Route::get('/shipping-policy', 'HomeController@shipping_policy');
-    Route::get('/cancelation', 'HomeController@cancelation');
+    // Simple vendor login test route
+    Route::post('/vendor-login-test', [VendorLoginController::class, 'login']);
+
+    Route::get('/terms-and-conditions', [HomeController::class, 'terms_and_conditions']);
+    Route::get('/about-us', [HomeController::class, 'about_us']);
+    Route::get('/privacy-policy', [HomeController::class, 'privacy_policy']);
+    Route::get('/refund-policy', [HomeController::class, 'refund_policy']);
+    Route::get('/shipping-policy', [HomeController::class, 'shipping_policy']);
+    Route::get('/cancelation', [HomeController::class, 'cancelation']);
 
 
-    Route::get('zone/list', 'ZoneController@get_zones');
-    Route::get('addon-category/list', 'AddonCategoryController@getList');
-    Route::get('zone/check', 'ZoneController@zonesCheck');
+    Route::get('zone/list', [ZoneController::class, 'get_zones']);
+    Route::get('addon-category/list', [AddonCategoryController::class, 'getList']);
+    Route::get('zone/check', [ZoneController::class, 'zonesCheck']);
 
-    Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');
-    Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
-        Route::post('sign-up', 'CustomerAuthController@register');
-        Route::post('login', 'CustomerAuthController@login');
-        Route::post('external-login', 'CustomerAuthController@customerLoginFromDrivemond');
-        Route::post('verify-phone', 'CustomerAuthController@verify_phone_or_email');
-        Route::post('update-info', 'CustomerAuthController@update_info');
-        Route::post('firebase-verify-token', 'CustomerAuthController@firebase_auth_verify');
+    Route::get('offline_payment_method_list', [ConfigController::class, 'offline_payment_method_list']);
+    Route::group(['prefix' => 'auth'], function () {
+        Route::post('sign-up', [CustomerAuthController::class, 'register']);
+        Route::post('login', [CustomerAuthController::class, 'login']);
+        Route::post('external-login', [CustomerAuthController::class, 'customerLoginFromDrivemond']);
+        Route::post('verify-phone', [CustomerAuthController::class, 'verify_phone_or_email']);
+        Route::post('update-info', [CustomerAuthController::class, 'update_info']);
+        Route::post('firebase-verify-token', [CustomerAuthController::class, 'firebase_auth_verify']);
 
-        Route::post('forgot-password', 'PasswordResetController@reset_password_request');
-        Route::post('verify-token', 'PasswordResetController@verify_token');
-        Route::put('reset-password', 'PasswordResetController@reset_password_submit');
-        Route::put('firebase-reset-password', 'PasswordResetController@firebase_auth_verify');
+        Route::post('forgot-password', [PasswordResetController::class, 'reset_password_request']);
+        Route::post('verify-token', [PasswordResetController::class, 'verify_token']);
+        Route::put('reset-password', [PasswordResetController::class, 'reset_password_submit']);
+        Route::put('firebase-reset-password', [PasswordResetController::class, 'firebase_auth_verify']);
 
-        Route::post('guest/request','CustomerAuthController@guest_request');
+        Route::post('guest/request', [CustomerAuthController::class, 'guest_request']);
 
-        Route::group(['prefix' => 'delivery-man','middleware' => 'actch:deliveryman_app'], function () {
-            Route::post('login', 'DeliveryManLoginController@login');
-            Route::post('store', 'DeliveryManLoginController@store');
+        Route::group(['prefix' => 'delivery-man'], function () {
+            Route::post('login', [DeliveryManLoginController::class, 'login']);
+            Route::post('store', [DeliveryManLoginController::class, 'store']);
 
-            Route::post('forgot-password', 'DMPasswordResetController@reset_password_request');
-            Route::post('verify-token', 'DMPasswordResetController@verify_token');
-            Route::post('firebase-verify-token', 'DMPasswordResetController@firebase_auth_verify');
-            Route::put('reset-password', 'DMPasswordResetController@reset_password_submit');
+            Route::post('forgot-password', [DMPasswordResetController::class, 'reset_password_request']);
+            Route::post('verify-token', [DMPasswordResetController::class, 'verify_token']);
+            Route::post('firebase-verify-token', [DMPasswordResetController::class, 'firebase_auth_verify']);
+            Route::put('reset-password', [DMPasswordResetController::class, 'reset_password_submit']);
         });
-        Route::group(['prefix' => 'vendor','middleware' => 'actch:vendor_app'], function () {
-            Route::post('login', 'VendorLoginController@login');
-            Route::post('forgot-password', 'VendorPasswordResetController@reset_password_request');
-            Route::post('verify-token', 'VendorPasswordResetController@verify_token');
-            Route::put('reset-password', 'VendorPasswordResetController@reset_password_submit');
-            Route::post('register','VendorLoginController@register');
+        Route::group(['prefix' => 'vendor'], function () {
+            Route::post('login', [VendorLoginController::class, 'login']);
+            Route::post('forgot-password', [VendorPasswordResetController::class, 'reset_password_request']);
+            Route::post('verify-token', [VendorPasswordResetController::class, 'verify_token']);
+            Route::put('reset-password', [VendorPasswordResetController::class, 'reset_password_submit']);
+            Route::post('register', [VendorLoginController::class, 'register']);
         });
 
-        Route::post('social-login', 'SocialAuthController@social_login');
-        Route::post('social-register', 'SocialAuthController@social_register');
+        Route::post('social-login', [SocialAuthController::class, 'social_login']);
+        Route::post('social-register', [SocialAuthController::class, 'social_register']);
     });
 
     //Store Subscription
-    Route::group(['prefix' => 'vendor','namespace' => 'Vendor'], function () {
-        Route::get('package-view', 'SubscriptionController@package_view');
-        Route::post('business_plan', 'SubscriptionController@business_plan');
-        Route::post('subscription/payment/api', 'SubscriptionController@subscription_payment_api')->name('subscription_payment_api');
-        Route::post('package-renew', 'SubscriptionController@package_renew_change_update_api');
-        Route::post('cancel-subscription', 'SubscriptionController@cancelSubscription');
-        Route::get('check-product-limits', 'SubscriptionController@checkProductLimits');
+    Route::group(['prefix' => 'vendor'], function () {
+        Route::get('package-view', [SubscriptionController::class, 'package_view']);
+        Route::post('business_plan', [SubscriptionController::class, 'business_plan']);
+        Route::post('subscription/payment/api', [SubscriptionController::class, 'subscription_payment_api'])->name('subscription_payment_api');
+        Route::post('package-renew', [SubscriptionController::class, 'package_renew_change_update_api']);
+        Route::post('cancel-subscription', [SubscriptionController::class, 'cancelSubscription']);
+        Route::get('check-product-limits', [SubscriptionController::class, 'checkProductLimits']);
     });
 
     // Module
-    Route::get('module', 'ModuleController@index');
-    Route::post('newsletter/subscribe','NewsletterController@index');
-    Route::get('landing-page', 'ConfigController@landing_page');
-    Route::get('react-landing-page', 'ConfigController@react_landing_page')->middleware('actch:react_web');
-    Route::get('flutter-landing-page', 'ConfigController@flutter_landing_page');
+    Route::get('module', [ModuleController::class, 'index']);
+    Route::post('newsletter/subscribe', [NewsletterController::class, 'index']);
+    Route::get('landing-page', [ConfigController::class, 'landing_page']);
+    Route::get('react-landing-page', [ConfigController::class, 'react_landing_page']);
+    Route::get('flutter-landing-page', [ConfigController::class, 'flutter_landing_page']);
 
     Route::group(['prefix' => 'delivery-man','middleware' => 'actch:deliveryman_app' ], function () {
         Route::get('last-location', 'DeliverymanController@get_last_location');

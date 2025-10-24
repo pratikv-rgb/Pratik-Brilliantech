@@ -472,7 +472,7 @@ class ItemController extends Controller
             'category_id' => 'required',
             'price' => 'required|numeric|min:0.01',
             'discount' => 'required|numeric|min:0',
-
+            'translations' => 'required',
         ], [
             'category_id.required' => translate('messages.category_required'),
         ]);
@@ -488,11 +488,11 @@ class ItemController extends Controller
         }
         $data = json_decode($request->translations, true);
 
-        if (count($data) < 1) {
+        if (!$data || !is_array($data) || count($data) < 1) {
             $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
         }
 
-        if ($request['price'] <= $dis || count($data) < 1 || $validator->fails()) {
+        if ($request['price'] <= $dis || !$data || !is_array($data) || count($data) < 1 || $validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 402);
         }
         $tag_ids = [];
